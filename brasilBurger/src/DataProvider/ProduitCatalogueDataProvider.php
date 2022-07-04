@@ -21,7 +21,7 @@ class ProduitCatalogueDataProvider implements ContextAwareCollectionDataProvider
    /**
      * {@inheritdoc}
      */
-    public function getCollection(string $ressourceClass, string $operationName = null, array $context = []){
+    public function getCollection(string $resourceClass, string $operationName = null, array $context = []){
 
         
         $context['menu'] = $this->menuRepo->findAll();
@@ -32,10 +32,10 @@ class ProduitCatalogueDataProvider implements ContextAwareCollectionDataProvider
         return $context;
     }
 
-    public function supports(string $ressourceClass, string $operationName = null, array $context = []):bool{
+    public function supports(string $resourceClass, string $operationName = null, array $context = []):bool{
 
 
-        return $ressourceClass = ProduitCatalogue:: class;
+        return $resourceClass = ProduitCatalogue:: class;
     }
 
 }

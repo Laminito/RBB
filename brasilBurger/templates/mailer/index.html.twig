@@ -1,0 +1,7 @@
+
+
+{% block body %}
+    <h1>Hello {{ user.prenom }}</h1>
+    <p>Cliquer sur ce lien pour activer votre compte</p> 
+    <a href="{{ url('api_users_validate_collection',{ "generateToken": user.generateToken }) }}">ici</a>
+{% endblock %}
