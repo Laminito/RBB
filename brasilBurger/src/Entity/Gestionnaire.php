@@ -18,34 +18,34 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GestionnaireRepository::class)]
 #[ApiResource(
-     collectionOperations:   [
-        "get"=>[
-            'method' => 'get',
-            'status' => Response::HTTP_OK,
-            'normalization_context' => ['groups' => ['Gestionnaire:read:simple']],
-            'security'=>"is_granted('ROLE_GESTIONNAIRE')",
-            'security_messages' => "Vous n'avez pas acces à cette ressource"
-        ],
-        "post"=>[  
-             'method' => 'post',
-             'path'   =>"/register/gestionnaire",
-             'security'=>"is_granted('ROLE_GESTIONNAIRE')",
-             'security_messages' => "Vous n'avez pas acces à cette ressource",
-    ]
- ],
-     itemOperations:         [
+      collectionOperations:   [
          "get"=>[
              'method' => 'get',
              'status' => Response::HTTP_OK,
-             'normalization_context' => ['groups' => ['Gestionnaire:read:All']],
+             'normalization_context' => ['groups' => ['Gestionnaire:read:simple']],
              'security'=>"is_granted('ROLE_GESTIONNAIRE')",
-             'security_messages' => "Vous n'avez pas acces à cette ressource" 
+             'security_messages' => "Vous n'avez pas acces à cette ressource"
          ],
-         "put"=>[
-             'method' => 'put',
-             'security'=>"is_granted('ROLE_GESTIONNAIRE')",
-             'security_messages' => "Vous n'avez pas acces à cette ressource" 
-         ],
+         "post"=>[  
+              'method' => 'post',
+              'path'   =>"/register/gestionnaire",
+              'security'=>"is_granted('ROLE_GESTIONNAIRE')",
+              'security_messages' => "Vous n'avez pas acces à cette ressource",
+     ]
+  ],
+      itemOperations:         [
+          "get"=>[
+              'method' => 'get',
+              'status' => Response::HTTP_OK,
+              'normalization_context' => ['groups' => ['Gestionnaire:read:All']],
+              'security'=>"is_granted('ROLE_GESTIONNAIRE')",
+              'security_messages' => "Vous n'avez pas acces à cette ressource" 
+          ],
+          "put"=>[
+              'method' => 'put',
+              'security'=>"is_granted('ROLE_GESTIONNAIRE')",
+              'security_messages' => "Vous n'avez pas acces à cette ressource" 
+          ],
         ],
  )]
 class Gestionnaire extends User

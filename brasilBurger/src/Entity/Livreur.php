@@ -14,26 +14,26 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
 #[ApiResource(
-    collectionOperations:   [
-        "get"=>[
-            'method' => 'get',
-            'status' => Response::HTTP_OK,
-            'normalization_context' => ['groups' => ['Livreur:read:simple']],
-            // 'denormalization_context' => ['groups' => ['Livreur:write:simple']],
-        ],
-        "post"
-    ],
-    itemOperations:         ["put","get","delete"],
+     collectionOperations:   [
+         "get"=>[
+             'method' => 'get',
+             'status' => Response::HTTP_OK,
+             'normalization_context' => ['groups' => ['Livreur:read:simple']],
+             'denormalization_context' => ['groups' => ['Livreur:write:simple']],
+         ],
+         "post"
+     ],
+     itemOperations:         ["put","get","delete"],
     )]
 class Livreur extends User
 {
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['Livreur:read:simple'])]
+    // #[Groups(['Livreur:read:simple'])]
     private $telephone;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['livreur:read:simple'])]
+    // #[Groups(['livreur:read:simple'])]
     private $matricule;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'livreurs')]

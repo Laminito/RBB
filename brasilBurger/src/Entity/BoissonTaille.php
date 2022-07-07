@@ -11,15 +11,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 #[ORM\Entity(repositoryClass: BoissonTailleRepository::class)]
 #[ApiResource(
-    collectionOperations:   [
-        "get"=>[
-            'method' => 'get',
-            'status' => Response::HTTP_OK,
-            'normalization_context' => ['groups' => ['BoissonTaille:read:simple']],
-        ],
-        "post"
-    ],
-    itemOperations:         ["put","get","delete"],
+    // collectionOperations:   [
+    //     "get"=>[
+    //         'method' => 'get',
+    //         'status' => Response::HTTP_OK,
+    //         'normalization_context' => ['groups' => ['BoissonTaille:read:simple']],
+    //     ],
+    //     "post"
+    // ],
+    // itemOperations:         ["put","get","delete"],
     )]
 class BoissonTaille
 {

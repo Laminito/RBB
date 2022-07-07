@@ -8,7 +8,11 @@ use App\Entity\Frites;
 use App\Entity\Boisson;
 use App\Entity\Product;
 use App\Entity\Gestionnaire;
+use App\Entity\QuantiteFrite;
+use App\Entity\QuantiteBurger;
+use App\Entity\QuantiteBoisson;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Entity;
 use App\Repository\MenuRepository;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\Common\Collections\Collection;
@@ -21,14 +25,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource(
     collectionOperations:   [
-        "get"=>[
-            'method' => 'get',
-            'status' => Response::HTTP_OK,
-            'normalization_context' => ['groups' => ['Menu:read:simple']],
-        ],
-        "post"
+    "get"=>[
+        'method' => 'get',
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['Menu:read:simple']],
     ],
-    itemOperations:         ["put","get","delete"],
+    "post"
+],
+ itemOperations:         ["put","get","delete"],
     )]
 
 class Menu  extends Product 
@@ -37,19 +41,10 @@ class Menu  extends Product
     #[Groups(['Menu:read:simple'])]
     private $libelle;
 
-    #[ORM\ManyToMany(targetEntity: Burger::class, inversedBy: 'menus')]
-    #[ApiSubresource]
-    #[Groups(['Menu:read:simple'])]
-    private $burgers;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'menus')]
     #[Groups(['Menu:read:simple'])]
     private $gestionnaire;
-
-    #[ORM\ManyToMany(targetEntity: Frites::class, inversedBy: 'menus')]
-    #[ApiSubresource]
-    #[Groups(['Menu:read:simple'])]
-    private $frites;
 
     #[ORM\Column(type: 'float', nullable: true)]
     #[Groups(['Menu:read:simple'])]
@@ -58,13 +53,15 @@ class Menu  extends Product
     #[ORM\ManyToMany(targetEntity: Boisson::class, inversedBy: 'menus')]
     private $boissons;
 
+  
+
     public function __construct()
     {
-        $this->burgers = new ArrayCollection();
-        $this->frites = new ArrayCollection();
-        $this->boissons = new ArrayCollection();
-        
+        parent::__construct();
+       
+      
     }
+
 
     public function getLibelle(): ?string
     {
@@ -78,29 +75,6 @@ class Menu  extends Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, Burger>
-     */
-    public function getBurgers(): Collection
-    {
-        return $this->burgers;
-    }
-
-    public function addBurger(Burger $burger): self
-    {
-        if (!$this->burgers->contains($burger)) {
-            $this->burgers[] = $burger;
-        }
-
-        return $this;
-    }
-
-    public function removeBurger(Burger $burger): self
-    {
-        $this->burgers->removeElement($burger);
-
-        return $this;
-    }
 
     public function getGestionnaire(): ?Gestionnaire
     {
@@ -114,36 +88,22 @@ class Menu  extends Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, Frites>
-     */
-    public function getFrites(): Collection
-    {
-        return $this->frites;
-    }
-
-    public function addFrite(Frites $frite): self
-    {
-        if (!$this->frites->contains($frite)) {
-            $this->frites[] = $frite;
-        }
-
-        return $this;
-    }
-
-    public function removeFrite(Frites $frite): self
-    {
-        $this->frites->removeElement($frite);
-
-        return $this;
-    }
 
   
     #[Groups(['Menu:read:simple'])]
     public function getPrixMenu(): void
     {
-        $reduction = 0.05;
-        $prixFinal=$this->totalBoisson()+$this->totalBurger()+$this->totalFrite() * $reduction;
+
+        $add = $this->qtburgers->toArray();
+        dd($this);
+        // foreach ($add as $value){
+        //     $this->$value.getPrix();
+        //     $this->$value.getQtburgers();
+        // }
+        // foreach ()
+        // $reduction = 0.05;
+        // $prixFinal=$this->totalBoisson()+$this->totalBurger()+$this->totalFrite() * $reduction;
+        
         $this->setPrix($prixFinal);
         
     }
@@ -155,48 +115,28 @@ class Menu  extends Product
         return $this;
     }
 
-    public function totalBurger(){
-        return array_reduce($this->burgers->toArray(),
-         function($totalBurger,$burger){
-            return $totalBurger+$burger->getPrix();
-        },0);
-    }
+    // public function totalBurger(){
+        // return array_reduce($this->qtburgers->toArray(),
+        //  function($totalBurger,$qtburgers){
+             
+        //     return $totalBurger+$qtburgers->getPrix();
+        // },0);
 
-    public function totalBoisson(){
-        return array_reduce($this->boissons->toArray(),
-         function($totalBoisson ,$boisson){
-            return $totalBoisson+$boisson->getPrix();
-        },0);
-    }
+
+    // }
+
+    // public function totalBoisson(){
+    //     return array_reduce($this->qtBoissons->toArray(),
+    //      function($totalBoisson ,$qtBoissons){
+    //         return $totalBoisson+$qtBoissons->getPrix();
+    //     },0);
+    // }
     
-    public function totalFrite(){
-        return array_reduce($this->frites->toArray(),
-         function($totalFrite ,$frites){
-            return $totalFrite+$frites->getPrix();
-        },0);
-    }
+    // public function totalFrite(){
+    //     return array_reduce($this->qtfrites->toArray(),
+    //      function($totalFrite ,$qtfrites){
+    //         return $totalFrite+$qtfrites->getPrix()*get;
+    //     },0);
+    // }
 
-    /**
-     * @return Collection<int, Boisson>
-     */
-    public function getBoissons(): Collection
-    {
-        return $this->boissons;
-    }
-
-    public function addBoisson(Boisson $boisson): self
-    {
-        if (!$this->boissons->contains($boisson)) {
-            $this->boissons[] = $boisson;
-        }
-
-        return $this;
-    }
-
-    public function removeBoisson(Boisson $boisson): self
-    {
-        $this->boissons->removeElement($boisson);
-
-        return $this;
-    }
 }

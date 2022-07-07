@@ -20,9 +20,7 @@ class UserDataPersister implements ContextAwareDataPersisterInterface
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+   
     public function supports($data, array $context = []): bool
     {
         return $data instanceof User;
@@ -43,9 +41,7 @@ class UserDataPersister implements ContextAwareDataPersisterInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    
     public function remove($data, array $context = [])
     {
         $this->entityManager->remove($data);

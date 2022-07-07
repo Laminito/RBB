@@ -14,34 +14,34 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class BurgerController extends AbstractController
 {
-    // #[Route('/burger', name: 'app_burger')]
+    //  #[Route('/burger', name: 'app_burger')]
   
-    // public function __invoke(Request $request,
-    // ValidatorInterface $validator,
-    // TokenStorageInterface $tokenStorage,
-    // SerializerInterface $serializer,
-    // EntityManagerInterface $entityManager): JsonResponse
-    // {
+    //  public function __invoke(Request $request,
+    //  ValidatorInterface $validator,
+    //  TokenStorageInterface $tokenStorage,
+    //  SerializerInterface $serializer
+    //  EntityManagerInterface $entityManager): JsonResponse
+    //  {
 
-    //     $burger = $serializer->deserialize($request->getContent(),
-    //     Burger::class,'json');
-    //     $errors = $validator->validate($burger);
-    //     if (count($errors) > 0) {
-    //         $errorsString =$serializer->serialize($errors,"json");
-    //         return new JsonResponse( $errorsString,Response::HTTP_BAD_REQUEST,[],true);
-    //     }
-    //     $burger->setGestionnaire($tokenStorage->getToken()->getUser());
-    //     $entityManager->persist($burger);
-    //     $entityManager->flush();
-    //     $result =$serializer->serialize([
-    //         'code'=>Response::HTTP_CREATED,
-    //         'data'=>$burger
-    //         ],
-    //         "json",
-    //         ["groups"=>["Burger:read:all"]
-    //     ]);
-    //     return new JsonResponse($result ,Response::HTTP_CREATED,[],true);
-    // }
+        //  $burger = $serializer->deserialize($request->getContent(),
+        //  Burger::class,'json');
+        //  $errors = $validator->validate($burger);
+        //  if (count($errors) > 0) {
+        //      $errorsString =$serializer->serialize($errors,"json");
+        //      return new JsonResponse( $errorsString,Response::HTTP_BAD_REQUEST,[],true);
+        //  }
+        //  $burger->setGestionnaire($tokenStorage->getToken()->getUser());
+        //  $entityManager->persist($burger);
+        //  $entityManager->flush();
+        //  $result =$serializer->serialize([
+        //      'code'=>Response::HTTP_CREATED,
+        //      'data'=>$burger
+        //      ],
+        //      "json",
+        //      ["groups"=>["Burger:read:all"]]
+        //     );
+        //  return new JsonResponse($result ,Response::HTTP_CREATED,[],true);
+    //  }
 
     
-}
+ }

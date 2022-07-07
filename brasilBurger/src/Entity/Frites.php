@@ -15,52 +15,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: FritesRepository::class)]
 #[ApiResource(
-    collectionOperations:   [
-        "get"=>[
-            'method' => 'get',
-            'status' => Response::HTTP_OK,
-            'normalization_context' => ['groups' => ['Frites:read:simple']],
-        ],
-        "post"
-    ],
-    itemOperations:         ["put","get","delete"],
+     collectionOperations:   [
+         "get"=>[
+             'method' => 'get',
+             'status' => Response::HTTP_OK,
+             'normalization_context' => ['groups' => ['Frites:read:simple']],
+         ],
+         "post"
+     ],
+     itemOperations:         ["put","get","delete"],
     )]
-
 class Frites extends Product
 {
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'frites')]
-    
-    private $menus;
+    #[ORM\OneToMany(mappedBy: 'frites', targetEntity: QuantiteFrite::class)]
 
     public function __construct()
     {
-        $this->menus = new ArrayCollection();
+        parent::__construct();
+       
     }
 
-    /**
-     * @return Collection<int, Menu>
-     */
-    public function getMenus(): Collection
-    {
-        return $this->menus;
-    }
-
-    public function addMenu(Menu $menu): self
-    {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-            $menu->addFrite($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMenu(Menu $menu): self
-    {
-        if ($this->menus->removeElement($menu)) {
-            $menu->removeFrite($this);
-        }
-
-        return $this;
-    }
 }

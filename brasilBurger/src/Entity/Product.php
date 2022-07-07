@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Gestionnaire;
+use App\Entity\LigneDeCommande;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use App\Repository\ProductRepository;
@@ -26,16 +27,16 @@ use Symfony\Component\Validator\Constraints as Assert;
                   ])]
 
 #[ApiResource(
-     collectionOperations:   [
-        "get"=>[
-            'method' => 'get',
-            'status' => Response::HTTP_OK,
-            'normalization_context' => ['groups' => ['Product:read:simple']],
-            // 'denormalizationContext'=> ['groups' => ['Product:write']]
+      collectionOperations:   [
+         "get"=>[
+             'method' => 'get',
+             'status' => Response::HTTP_OK,
+             'normalization_context' => ['groups' => ['Product:read:simple']],
+              'denormalizationContext'=> ['groups' => ['Product:write']]
 
-        ],
-    ],
-      itemOperations:         [],
+         ],
+     ],
+       itemOperations:         [],
 
  )]
 class Product
@@ -44,7 +45,7 @@ class Product
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     
-    #[Groups(['LDC:read:simple','Product:read:simple','Burger:read:simple','Burger:read:all','Boisson:read:simple','Frites:read:simple','Menu:read:simple'])]
+    // #[Groups(['LDC:read:simple','Product:read:simple','Burger:read:simple','Burger:read:all','Boisson:read:simple','Frites:read:simple','Menu:read:simple'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -57,7 +58,7 @@ class Product
     protected $image;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(['Burger:write','LDC:read:simple','Burger:read:simple','Product:read:simple','Burger:read:all','Boisson:read:simple','Frites:read:simple','Menu:read:simple'])]
+    #[Groups(['Burger:write','LDC:read:simple','Burger:read:simple','Product:read:simple','Burger:read:all','Boisson:read:simple','Frites:read:simple'])]
     // #[Assert\NotBlank(message:"Le prix est Obligatoire")]
     protected $prix;
 
@@ -67,11 +68,11 @@ class Product
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'products')]
     #[ApiSubresource]
-    #[Groups(['Burger:read:simple','Burger:read:all', 'Burger:write'])]
+    // #[Groups(['Burger:read:simple','Burger:read:all', 'Burger:write'])]
     private $gestionnaire;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: LigneDeCommande::class)]
-    #[Groups(['Burger:read:simple','Burger:read:all'])]
+    // #[Groups(['Burger:read:simple','Burger:read:all'])]
     #[ApiSubresource]
     private $lignedecommandes;
 

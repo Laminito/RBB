@@ -32,21 +32,16 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ApiResource(
     
-    collectionOperations:  [
-       "validate"=>[
-        'method' =>"patch",
-        'controller' => MailerController::class,
-        'path' => "/users/{generateToken}",
-        'deserialize' =>false,
-       ],
-       "get"=>[
-        'method' => 'get',
-        'status' => Response::HTTP_OK,
-        'normalization_context' => ['groups' => ['User:read:simple']],
+     collectionOperations:  [
+   
+        "get"=>[
+         'method' => 'get',
+         'status' => Response::HTTP_OK,
+         'normalization_context' => ['groups' => ['User:read:simple']],
+     ],
+        "post"
     ],
-       "post"
-   ],
-   itemOperations:         ["put","get","delete"],
+    itemOperations:         ["put","get","delete"],
     
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -55,31 +50,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     // #[Groups(['Burger:read:all'])]
-    #[Groups(['Burger:read:all','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
+    // #[Groups(['Burger:read:all','Gestionnaire:read:simple','Livreur:read:simple'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(['Burger:read:all','User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
+    // #[Groups(['Burger:read:all','User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
     #[Assert\Email(message:"Le mail n'est pas valide")]
+    // #[Groups(['User:read:simple'])]
+     #[Groups(['Gestionnaire:read:simple'])]
+
     protected $email;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(['User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
+    // #[Groups(['User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
+    // #[Groups(['User:read:simple'])]
+    #[Groups(['Gestionnaire:read:simple'])]
+
     protected $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
+    // #[Groups(['User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
+    // #[Groups(['User:read:simple'])]
+    #[Groups(['Gestionnaire:read:simple'])]
     protected $prenom;
 
-    #[Groups(['User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
+    // #[Groups(['User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    // #[Groups(['User:read:simple'])]
+    #[Groups(['Gestionnaire:read:simple'])]
+
     protected $nom;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    #[Groups(['User:read:simple'])]
+    // #[Groups(['User:read:simple'])]
+    
     protected $etat=true;
 
     #[ORM\Column(type: 'boolean', nullable: true)]

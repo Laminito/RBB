@@ -28,7 +28,7 @@ class Taille
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['Taille:read:simple'])]
+    // #[Groups(['Taille:read:simple'])]
     private $id;
 
     #[ORM\Column(type: 'string',nullable: true, length: 255)]

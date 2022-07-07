@@ -16,28 +16,27 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
 #[ApiResource(
-    collectionOperations:   [
-        "get"=>[
-            'method' => 'get',
-            'status' => Response::HTTP_OK,
-            'normalization_context' => ['groups' => ['Boisson:read:simple']],
-        ],
-        "post"
-    ],
-    itemOperations:         ["put","get","delete"],
+     collectionOperations:   [
+         "get"=>[
+             'method' => 'get',
+             'status' => Response::HTTP_OK,
+             'normalization_context' => ['groups' => ['Boisson:read:simple']],
+         ],
+         "post"
+     ],
+     itemOperations:         ["put","get","delete"],
     )]
 class Boisson extends Product
 {
-    #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: BoissonTaille::class)]
     private $boissontailles;
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'boissons')]
-    private $menus;
+    
 
     public function __construct()
     {
         $this->boissontailles = new ArrayCollection();
-        $this->menus = new ArrayCollection();
+       
+     
        
     }
 
@@ -71,30 +70,18 @@ class Boisson extends Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, Menu>
-     */
-    public function getMenus(): Collection
+    public function getMenu(): ?Menu
     {
-        return $this->menus;
+        return $this->menu;
     }
 
-    public function addMenu(Menu $menu): self
+    public function setMenu(?Menu $menu): self
     {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-            $menu->addBoisson($this);
-        }
+        $this->menu = $menu;
 
         return $this;
     }
 
-    public function removeMenu(Menu $menu): self
-    {
-        if ($this->menus->removeElement($menu)) {
-            $menu->removeBoisson($this);
-        }
-
-        return $this;
-    }
+  
+    
 }
