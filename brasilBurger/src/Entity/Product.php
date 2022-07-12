@@ -15,6 +15,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
     #[ORM\InheritanceType("JOINED")]
@@ -45,7 +46,7 @@ class Product
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     
-    // #[Groups(['LDC:read:simple','Product:read:simple','Burger:read:simple','Burger:read:all','Boisson:read:simple','Frites:read:simple','Menu:read:simple'])]
+    #[Groups(['Menu:write'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -53,9 +54,9 @@ class Product
     // #[Assert\NotBlank(message:"Le nom est Obligatoire")]
     protected $nom;
 
-    #[ORM\Column(type: 'object', nullable: true)]
-    #[Groups(['Burger:write','LDC:read:simple','Burger:read:simple','Product:read:simple','Burger:read:all','Boisson:read:simple','Frites:read:simple','Menu:read:simple'])]
-    protected $image;
+    // #[ORM\Column(type: 'object', nullable: true)]
+    // #[Groups(['Burger:write','LDC:read:simple','Burger:read:simple','Product:read:simple','Burger:read:all','Boisson:read:simple','Frites:read:simple'])]
+    // protected $image;
 
     #[ORM\Column(type: 'float', nullable: true)]
     #[Groups(['Burger:write','LDC:read:simple','Burger:read:simple','Product:read:simple','Burger:read:all','Boisson:read:simple','Frites:read:simple'])]
@@ -75,6 +76,14 @@ class Product
     // #[Groups(['Burger:read:simple','Burger:read:all'])]
     #[ApiSubresource]
     private $lignedecommandes;
+
+    #[ORM\Column(type: 'blob', nullable: true)]
+    protected $image;
+
+    
+    #[Groups(['Burger:write','LDC:read:simple','Burger:read:simple','Product:read:simple','Burger:read:all','Boisson:read:simple','Frites:read:simple'])]
+    #[SerializedName('image')]
+    protected $imageTaupe;
 
     public function __construct()
     {
@@ -99,17 +108,7 @@ class Product
         return $this;
     }
 
-    public function getImage(): ?object
-    {
-        return $this->image;
-    }
 
-    public function setImage(?object $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
 
     public function getPrix(): ?float
     {
@@ -177,6 +176,38 @@ class Product
 
         return $this;
     }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
  
  
+
+    /**
+     * Get the value of imageTaupe
+     */ 
+    public function getImageTaupe()
+    {
+        return $this->imageTaupe;
+    }
+
+    /**
+     * Set the value of imageTaupe
+     *
+     * @return  self
+     */ 
+    public function setImageTaupe($imageTaupe)
+    {
+        $this->imageTaupe = $imageTaupe;
+
+        return $this;
+    }
 }

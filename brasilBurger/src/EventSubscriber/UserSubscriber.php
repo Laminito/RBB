@@ -42,5 +42,10 @@ class UserSubscriber implements EventSubscriberInterface
         if($args->getObject() instanceof Burger or $args->getObject() instanceof Boisson or $args->getObject() instanceof Frite or $args->getObject() instanceof Menu) {
             $args->getObject()->setGestionnaire($this->getUser());                  
         }
+
+        // if($args->getObject() instanceof Menu){
+
+        //     dd($args->getObject());
+        // }
     }
 }

@@ -13,6 +13,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
 #[ApiResource(
@@ -28,15 +29,13 @@ use Doctrine\Common\Collections\ArrayCollection;
     )]
 class Boisson extends Product
 {
+    // #[Groups(['Menu:read:simple'])]
     private $boissontailles;
-
-    
 
     public function __construct()
     {
         $this->boissontailles = new ArrayCollection();
        
-     
        
     }
 
@@ -69,19 +68,6 @@ class Boisson extends Product
 
         return $this;
     }
-
-    public function getMenu(): ?Menu
-    {
-        return $this->menu;
-    }
-
-    public function setMenu(?Menu $menu): self
-    {
-        $this->menu = $menu;
-
-        return $this;
-    }
-
   
     
 }
