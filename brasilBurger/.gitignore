@@ -8,7 +8,8 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+heroku config:set APP_ENV=prod
 
 ###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
+# /config/jwt/*
 ###< lexik/jwt-authentication-bundle ###

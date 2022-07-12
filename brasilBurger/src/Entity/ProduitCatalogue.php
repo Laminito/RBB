@@ -1,6 +1,7 @@
 <?php   
 namespace App\Entity;
 
+use App\Entity\ProduitCatalogue;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
