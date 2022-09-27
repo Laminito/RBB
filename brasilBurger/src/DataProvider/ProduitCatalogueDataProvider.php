@@ -3,6 +3,7 @@
 namespace App\DataProvider;
 
 use Doctrine\ORM\Mapping\Entity;
+use App\Entity\ProductCatalogues;
 use App\Repository\MenuRepository;
 use App\Repository\BurgerRepository;
 use App\DataProvider\ProduitCatalogueDataProvider;
@@ -15,26 +16,26 @@ final class ProduitCatalogueDataProvider implements ContextAwareCollectionDataPr
     public function __construct(MenuRepository $menuRepo,BurgerRepository $burgerRepo){
         $this->menuRepo= $menuRepo;
         $this->burgerRepo= $burgerRepo;
-
-        // dd($this->menuRepo->findAll());
-    }
-
-  
-    public function getCollection(string $resourceClass, string $operationName = null, array $context = []){
-
         
-        // $context['menu'] = $this->menuRepo->findAll();
-        // dd($context);
-        $catalogue=[];
-        $catalogue['burger'] = $this->burgerRepo->findAll();
-        $catalogue['menu'] = $this->menuRepo->findAll();
-        return $catalogue;
+
+        //  dd($this->burgerRepo->findAll());
     }
+    
+    
+    public function getCollection(string $resourceClass, string $operationName = null, array $context = []){
+        
+        
+        //  $context['menu'] = $this->menuRepo->findAll();
+         $categorie=[];
+         $catalogue['burger'] = $this->burgerRepo->findAll();
+         $catalogue['menu']   = $this->menuRepo->findAll();
+         return $catalogue;
+        }
+        
+        public function supports(string $resourceClass, string $operationName = null, array $context = []):bool{
+       
 
-    public function supports(string $resourceClass, string $operationName = null, array $context = []):bool{
-
-
-        return $resourceClass == ProduitCatalogueDataProvider:: class;
+        return $resourceClass == ProductCatalogues:: class;
     }
 
 }

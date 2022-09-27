@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Commande;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LigneDeCommandeRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LigneDeCommandeRepository::class)]
@@ -16,13 +18,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
          "get"=>[
              'method' => 'get',
              'status' => Response::HTTP_OK,
-             'normalization_context' => ['groups' => ['LDC:read:simple']],
+             'normalization_context' => ['groups' => ['ldc:read:simple']],
          ],
        
          "post"=>[
              'method' => 'post',
-             'normalization_context' => ['groups' => ['LDC:read:all']],
-              'denormalization_context' => ['groups' => ['Burger:write']],
+             'normalization_context' => ['groups' => ['ldc:read:all']],
+              'denormalization_context' => ['groups' => ['ldc:write']],
          ],
         
      ],
@@ -33,7 +35,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
          "get"=>[
              'method' => 'get',
              'status' => Response::HTTP_OK,
-             'normalization_context' => ['groups' => ['LDC:read:all']],
+             'normalization_context' => ['groups' => ['ldc:read:id']],
          ],  
      ],
     )]
@@ -42,31 +44,29 @@ class LigneDeCommande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    // #[Groups(['Commande:read:simple','LDC:read:all','LDC:read:simple'])]
+    #[Groups(['ldc:read:all','ldc:read:simple'])]
     private $id;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['Commande:write'])]
+    #[Groups(['Commande:write','Commande:read:all','ldc:write','ldc:read:all','ldc:read:simple','Commande:read:simple'])]
     private $quantite;
 
-    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'lignedecommandes')]
-    #[Groups(['Commande:read:simple','Commande:read:all','LDC:read:all','LDC:read:simple','Commande:write'])]
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'lignedecommandes',cascade:['persist'])]
+    #[Groups(['Commande:read:simple','Commande:read:all','Commande:write','ldc:write','ldc:read:all','ldc:read:simple'])]
     private $product;
 
     #[ORM\ManyToOne(targetEntity: Facture::class, inversedBy: 'lignedecommandes')]
-    // #[Groups(['Commande:read:simple','Commande:read:all','LDC:read:all','LDC:read:simple'])]
+    // #[Groups(['Commande:read:simple','Commande:read:all','ldc:read:all','LDC:read:simple'])]
     private $facture;
+    // #[Groups(['Commande:read:simple','Commande:read:all','Commande:write','ldc:write','ldc:read:all','ldc:read:simple'])]
 
-    #[ORM\OneToMany(mappedBy: 'lignesDeCommandes', targetEntity: Commande::class)]
-    private $commandes;
+    #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'lignesdecommandes',cascade:["persist"])]
+    private $commande;
 
-    #[ORM\Column(type: 'float', nullable: true)]
-    private $prixLDC;
-
-    public function __construct()
-    {
-        $this->commandes = new ArrayCollection();
+    public function __construct(){
+        
     }
+   
 
     public function getId(): ?int
     {
@@ -109,44 +109,14 @@ class LigneDeCommande
         return $this;
     }
 
-    /**
-     * @return Collection<int, Commande>
-     */
-    public function getCommandes(): Collection
+    public function getCommande(): ?Commande
     {
-        return $this->commandes;
+        return $this->commande;
     }
 
-    public function addCommande(Commande $commande): self
+    public function setCommande(?Commande $commande): self
     {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes[] = $commande;
-            $commande->setLignesDeCommandes($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommande(Commande $commande): self
-    {
-        if ($this->commandes->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
-            if ($commande->getLignesDeCommandes() === $this) {
-                $commande->setLignesDeCommandes(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getPrixLDC(): ?float
-    {
-        return $this->prixLDC;
-    }
-
-    public function setPrixLDC(?float $prixLDC): self
-    {
-        $this->prixLDC = $prixLDC;
+        $this->commande = $commande;
 
         return $this;
     }

@@ -14,38 +14,33 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
 #[ApiResource(
-     collectionOperations:   [
-         "get"=>[
-             'method' => 'get',
-             'status' => Response::HTTP_OK,
-             'normalization_context' => ['groups' => ['Livreur:read:simple']],
-             'denormalization_context' => ['groups' => ['Livreur:write:simple']],
-         ],
-         "post"
-     ],
-     itemOperations:         ["put","get","delete"],
+    
     )]
 class Livreur extends User
 {
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    // #[Groups(['Livreur:read:simple'])]
+    // #[Groups(['Livreur:read:simple','Livreur:write','Livreur:read:all'])]
     private $telephone;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    // #[Groups(['livreur:read:simple'])]
+    // #[Groups(['Livreur:read:simple','Livreur:write','Livreur:read:all'])]
     private $matricule;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'livreurs')]
+    // #[Groups(['Livreur:read:simple','Livreur:write','Livreur:read:all'])]
     private $gestionnaire;
 
     #[ORM\OneToMany(mappedBy: 'livreurs', targetEntity: Livraison::class)]
+   
     private $livraisons;
 
     public function __construct(){
-        $this->roles=['ROLE_Livreur'];
+        parent::__construct();
+        $this->roles=['ROLE_LIVREUR'];
         $this->livraisons = new ArrayCollection();
     }
+
 
     public function getTelephone(): ?string
     {

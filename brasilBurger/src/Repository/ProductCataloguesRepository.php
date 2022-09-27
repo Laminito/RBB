@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Produit;
+use App\Entity\ProductCatalogues;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Produit>
+ * @extends ServiceEntityRepository<ProductCatalogues>
  *
- * @method Produit|null find($id, $lockMode = null, $lockVersion = null)
- * @method Produit|null findOneBy(array $criteria, array $orderBy = null)
- * @method Produit[]    findAll()
- * @method Produit[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ProductCatalogues|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ProductCatalogues|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ProductCatalogues[]    findAll()
+ * @method ProductCatalogues[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ProduitRepository extends ServiceEntityRepository
+class ProductCataloguesRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Produit::class);
+        parent::__construct($registry, ProductCatalogues::class);
     }
 
-    public function add(Produit $entity, bool $flush = false): void
+    public function add(ProductCatalogues $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class ProduitRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Produit $entity, bool $flush = false): void
+    public function remove(ProductCatalogues $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class ProduitRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Produit[] Returns an array of Produit objects
+//     * @return ProductCatalogues[] Returns an array of ProductCatalogues objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class ProduitRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Produit
+//    public function findOneBySomeField($value): ?ProductCatalogues
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')

@@ -46,7 +46,7 @@
 # Présentation: `API Platform est un framework web utilisé pour générer des APIREST et GraphQL, se basant sur le patron de conception MVC. La partie serveur du framework est écrite en PHP et basée sur le framework Symfony.`
 
 # Installation des dépendances: 
-`composer require api`
+`composer require api-platform/core`
 
 # Documentation swagger
 `path : Post http://localhost:8000/api`

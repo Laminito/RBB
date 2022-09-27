@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Menu;
+use App\Entity\Burger;
+use App\Entity\MenuBurger;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToOne;
 use App\Repository\MenuBurgerRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,21 +19,23 @@ class MenuBurger
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    // #[Groups(['catalogue:read'])]
     private $id;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['Menu:write','Menu:read:simple'])]
-    #[SerializedName('QuantiteBurgers')]
+    #[Groups(['catalogue:read','Menu:write','Menu:read:simple','Menu:read:all','Menu:read:id'])]
+    // #[SerializedName('QuantiteBurgers')]
     private $qtburgers;
 
-    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'qtburgers')]
-    private $menu;
-
-    #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'qtburgers')]
-    #[Groups(['Menu:write','Menu:read:simple'])]
-    #[SerializedName('Burgers')]
-    private $burger;
-
+    
+    // #[Groups(['catalogue:read'])]
+    #[ORM\ManyToOne(targetEntity:Menu::class,inversedBy: 'menuBurgers')]
+    private ?Menu $menu = null;
+    
+    #[Groups(['Menu:write','Menu:read:simple','Menu:read:all','Menu:read:id'])]
+    #[ORM\ManyToOne(targetEntity:Burger::class,inversedBy: 'menuBurgers')]
+    private ?Burger $burger = null;
+ 
     public function getId(): ?int
     {
         return $this->id;
@@ -47,17 +53,7 @@ class MenuBurger
         return $this;
     }
 
-    public function getMenu(): ?Menu
-    {
-        return $this->menu;
-    }
-
-    public function setMenu(?Menu $menu): self
-    {
-        $this->menu = $menu;
-
-        return $this;
-    }
+  
 
     public function getBurger(): ?Burger
     {
@@ -70,13 +66,18 @@ class MenuBurger
 
         return $this;
     }
-//  public function totalBurger(){
-      # code...
-     
-        // return array_reduce($this->burger->toArray(),
-        //  function($totalBurger,$burger){
-        //     return $totalBurger+$burger->getPrix()*$burgers->getQtburgers();
-        // },0);
-    
-    // }  
+
+    public function getMenu(): ?Menu
+    {
+        return $this->menu;
+    }
+
+    public function setMenu(?Menu $menu): self
+    {
+        $this->menu = $menu;
+
+        return $this;
+    }
+
+   
 }

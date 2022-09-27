@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec22439ed0263a8e5fbfc7267f0378a0",
+    "content-hash": "c766c80f63caeec355470ecaba7152eb",
     "packages": [
         {
             "name": "api-platform/core",
@@ -1880,16 +1880,16 @@
         },
         {
             "name": "grifix/reflection",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:grifix/reflection.git",
-                "reference": "f2b5fcb035fa1c0e9689c2994478f520061c975c"
+                "reference": "729d77de3f72b6ca9d3b5740d52ca8a1ec3baae4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/grifix%2Freflection/repository/archive.zip?sha=f2b5fcb035fa1c0e9689c2994478f520061c975c",
-                "reference": "f2b5fcb035fa1c0e9689c2994478f520061c975c",
+                "url": "https://gitlab.com/api/v4/projects/grifix%2Freflection/repository/archive.zip?sha=729d77de3f72b6ca9d3b5740d52ca8a1ec3baae4",
+                "reference": "729d77de3f72b6ca9d3b5740d52ca8a1ec3baae4",
                 "shasum": ""
             },
             "require": {
@@ -1916,7 +1916,7 @@
                 }
             ],
             "description": "Wrapper for the ReflectionObject",
-            "time": "2022-06-01T12:27:31+00:00"
+            "time": "2022-07-23T06:05:36+00:00"
         },
         {
             "name": "laminas/laminas-code",
@@ -7469,22 +7469,22 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.43.0",
+            "version": "v1.45.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "e3f9a1d9e0f4968f68454403e820dffc7db38a59"
+                "reference": "7ae4ff28ac1b6d6d55591999026040d58b8a3967"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/e3f9a1d9e0f4968f68454403e820dffc7db38a59",
-                "reference": "e3f9a1d9e0f4968f68454403e820dffc7db38a59",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/7ae4ff28ac1b6d6d55591999026040d58b8a3967",
+                "reference": "7ae4ff28ac1b6d6d55591999026040d58b8a3967",
                 "shasum": ""
             },
             "require": {
                 "doctrine/inflector": "^2.0",
                 "nikic/php-parser": "^4.11",
-                "php": ">=7.2.5",
+                "php": ">=8.0",
                 "symfony/config": "^5.4.7|^6.0",
                 "symfony/console": "^5.4.7|^6.0",
                 "symfony/dependency-injection": "^5.4.7|^6.0",
@@ -7495,7 +7495,9 @@
                 "symfony/http-kernel": "^5.4.7|^6.0"
             },
             "conflict": {
-                "doctrine/orm": "<2.10"
+                "doctrine/doctrine-bundle": "<2.4",
+                "doctrine/orm": "<2.10",
+                "symfony/doctrine-bridge": "<5.4"
             },
             "require-dev": {
                 "composer/semver": "^3.0",
@@ -7540,7 +7542,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.43.0"
+                "source": "https://github.com/symfony/maker-bundle/tree/v1.45.0"
             },
             "funding": [
                 {
@@ -7556,7 +7558,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-17T15:46:50+00:00"
+            "time": "2022-07-26T12:31:45+00:00"
         }
     ],
     "aliases": [],
@@ -7565,7 +7567,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "*",
+        "php": "^8.0.0",
         "ext-ctype": "*",
         "ext-iconv": "*"
     },

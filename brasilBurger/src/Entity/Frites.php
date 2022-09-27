@@ -3,14 +3,19 @@
 namespace App\Entity;
 
 use App\Entity\Menu;
+use App\Entity\Frites;
 use App\Entity\Product;
+use App\Entity\Products;
 use App\Entity\Complement;
+use App\Entity\MenuFrites;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OneToMany;
 use App\Repository\FritesRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 
@@ -22,52 +27,64 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
              'status' => Response::HTTP_OK,
              'normalization_context' => ['groups' => ['Frites:read:simple']],
          ],
-         "post"
+ 
+         "post"=>[  
+             'method' => 'post',
+             'normalization_context'   => ['groups' => ['Frites:read:all']],
+             'denormalization_context' => ['groups' => ['Frites:write']],
+           
+         ],
      ],
      itemOperations:         ["put","get","delete"],
     )]
 class Frites extends Product
 {
-    #[ORM\OneToMany(mappedBy: 'frites', targetEntity: MenuFrites::class)]
-    private $qtfrites;
+    #[Groups(['Menu:read:id'])]
+    protected $id;
+    #[Groups(['Menu:read:id'])]
+    protected $nom;
+    #[Groups(['Menu:read:id'])]
+    protected $image;
+    #[Groups(['Menu:read:id'])]
+    protected $prix;
 
-    #[ORM\OneToMany(mappedBy: 'frites', targetEntity: QuantiteFrite::class)]
+    #[Groups(['catalogue:read'])]
+    #[ORM\OneToMany(mappedBy: 'frite', targetEntity: MenuFrites::class)]
+    private Collection $menuFrites;
 
+    
     public function __construct()
     {
         parent::__construct();
-        $this->qtfrites = new ArrayCollection();
-       
+        $this->menuFrites = new ArrayCollection();
     }
-
     /**
      * @return Collection<int, MenuFrites>
      */
-    public function getQtfrites(): Collection
+    public function getMenuFrites(): Collection
     {
-        return $this->qtfrites;
+        return $this->menuFrites;
     }
 
-    public function addQtfrite(MenuFrites $qtfrite): self
+    public function addMenuFrite(MenuFrites $menuFrite): self
     {
-        if (!$this->qtfrites->contains($qtfrite)) {
-            $this->qtfrites[] = $qtfrite;
-            $qtfrite->setFrites($this);
+        if (!$this->menuFrites->contains($menuFrite)) {
+            $this->menuFrites->add($menuFrite);
+            $menuFrite->setFrite($this);
         }
 
         return $this;
     }
 
-    public function removeQtfrite(MenuFrites $qtfrite): self
+    public function removeMenuFrite(MenuFrites $menuFrite): self
     {
-        if ($this->qtfrites->removeElement($qtfrite)) {
+        if ($this->menuFrites->removeElement($menuFrite)) {
             // set the owning side to null (unless already changed)
-            if ($qtfrite->getFrites() === $this) {
-                $qtfrite->setFrites(null);
+            if ($menuFrite->getFrite() === $this) {
+                $menuFrite->setFrite(null);
             }
         }
 
         return $this;
     }
-
 }

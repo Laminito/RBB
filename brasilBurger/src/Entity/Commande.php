@@ -5,10 +5,13 @@ namespace App\Entity;
 use App\Entity\Zone;
 use App\Entity\Client;
 use App\Entity\Facture;
+use App\Entity\Commande;
 use App\Entity\Livraison;
 use App\Entity\EtatCommande;
 use App\Entity\LigneDeCommande;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -40,7 +43,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
          "get"=>[
              'method' => 'get',
              'status' => Response::HTTP_OK,
-             'normalization_context' => ['groups' => ['Commande:read:all']],
+             'normalization_context' => ['groups' => ['Commande:read:id']],
          ],  
      ],
     )]
@@ -49,47 +52,60 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    // #[Groups(['Commande:read:simple'])]
+    #[Groups(['Commande:read:simple','Livraison:write','Commande:read:id'])]
     private $id;
 
-    #[ORM\Column(type: 'date', nullable: true)]
-    // #[Groups(['Commande:read:simple','Commande:read:all'])]
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['Commande:read:simple','Commande:read:all','Commande:read:id'])]
     private $date;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(['Commande:read:simple','Commande:read:all'])]
+    #[Groups(['Commande:read:simple','Commande:write','Commande:read:all','Commande:read:id'])]
     private $prix;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    // #[Groups(['Commande:read:simple','Commande:read:all'])]
+    #[Groups(['Commande:read:simple','Commande:read:all','Commande:read:id'])]
     private $etat=true;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    // #[Groups(['Commande:read:simple','Commande:read:all'])]
-    private $recuperation;
+    #[ORM\Column(type: 'boolean',  nullable: true)]
+    #[Groups(['Commande:read:simple','Commande:read:all','Commande:read:id'])]
+    private $recuperation=true;
 
     #[ORM\OneToOne(targetEntity: Facture::class, cascade: ['persist', 'remove'])]
     // #[Groups(['Commande:read:simple','Commande:read:all'])]
     private $facture;
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'zones')]
-    // #[Groups(['Commande:read:simple','Commande:read:all'])]
+    // #[Groups(['Commande:write','Commande:read:simple','Commande:read:all','Commande:read:id'])]
     private $clients;
 
-    #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'commandes')]
-    private $zones;
-
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commandes')]
-  
+    // #[Groups(['Commande:write','Commande:read:simple','Commande:read:all'])]
     private $livraisons;
 
-    #[ORM\ManyToOne(targetEntity: EtatCommande::class, inversedBy: 'commandes')]
-    private $etatcommande;
+  
 
-    #[ORM\ManyToOne(targetEntity: LigneDeCommande::class, inversedBy: 'commandes')]
     #[Groups(['Commande:read:simple','Commande:read:all','Commande:write'])]
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneDeCommande::class,cascade:['persist'])]
     #[SerializedName("Produits")]
-    private $lignesDeCommandes;
+    private $lignesdecommandes;
+
+    #[Groups(['Commande:read:simple','Commande:read:all'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $etatCommande = null;
+    
+    #[Groups(['Commande:read:simple','Commande:read:all'])]
+    #[ORM\Column(length: 255)]
+    private ?string $code = null;
+
+    public function __construct()
+    {
+        $this->code =$FourDigitRandomNumber = rand(1231,7879);
+        $this->etatCommande="En cours";
+        $this->date=new \DateTime();
+        $this->lignesdecommandes = new ArrayCollection();
+    }
+
 
 
     public function getId(): ?int
@@ -169,18 +185,6 @@ class Commande
         return $this;
     }
 
-    public function getZones(): ?Zone
-    {
-        return $this->zones;
-    }
-
-    public function setZones(?Zone $zones): self
-    {
-        $this->zones = $zones;
-
-        return $this;
-    }
-
     public function getLivraisons(): ?Livraison
     {
         return $this->livraisons;
@@ -193,26 +197,68 @@ class Commande
         return $this;
     }
 
-    public function getEtatcommande(): ?EtatCommande
+    // public function getEtatcommande(): ?EtatCommande
+    // {
+    //     return $this->etatcommande;
+    // }
+
+    // public function setEtatcommande(?EtatCommande $etatcommande): self
+    // {
+    //     $this->etatcommande = $etatcommande;
+
+    //     return $this;
+    // }
+
+    /**
+     * @return Collection<int, LigneDeCommande>
+     */
+    public function getLignesdecommandes(): Collection
     {
-        return $this->etatcommande;
+        return $this->lignesdecommandes;
     }
 
-    public function setEtatcommande(?EtatCommande $etatcommande): self
+    public function addLignesdecommande(LigneDeCommande $lignesdecommande): self
     {
-        $this->etatcommande = $etatcommande;
+        if (!$this->lignesdecommandes->contains($lignesdecommande)) {
+            $this->lignesdecommandes[] = $lignesdecommande;
+            $lignesdecommande->setCommande($this);
+        }
 
         return $this;
     }
 
-    public function getLignesDeCommandes(): ?LigneDeCommande
+    public function removeLignesdecommande(LigneDeCommande $lignesdecommande): self
     {
-        return $this->lignesDeCommandes;
+        if ($this->lignesdecommandes->removeElement($lignesdecommande)) {
+            // set the owning side to null (unless already changed)
+            if ($lignesdecommande->getCommande() === $this) {
+                $lignesdecommande->setCommande(null);
+            }
+        }
+
+        return $this;
     }
 
-    public function setLignesDeCommandes(?LigneDeCommande $lignesDeCommandes): self
+    public function getEtatCommande(): ?string
     {
-        $this->lignesDeCommandes = $lignesDeCommandes;
+        return $this->etatCommande;
+    }
+
+    public function setEtatCommande(?string $etatCommande): self
+    {
+        $this->etatCommande = $etatCommande;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

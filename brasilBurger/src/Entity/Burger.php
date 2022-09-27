@@ -6,9 +6,12 @@ use App\Entity\Menu;
 use BurgerController;
 use App\Entity\Burger;
 use App\Entity\Product;
+use App\Entity\Products;
+use App\Entity\MenuBurger;
 use App\Entity\Gestionnaire;
 use App\Entity\QuantiteBurger;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OneToMany;
 use App\Repository\BurgerRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -21,23 +24,23 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\security;
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
 #[ApiResource(
  collectionOperations:   [
-    "get"=>[
-        'method' => 'get',
-        'status' => Response::HTTP_OK,
-        'normalization_context' => ['groups' => ['Burger:read:simple']],
-    ],
-    
-    "post"=>[
-        'method' => 'post',
-        'normalization_context' => ['groups' => ['Burger:read:all']],
-        'denormalization_context' => ['groups' => ['Burger:write']]
-    ],
-    "add" => [
-        'method' => 'Post',
-        "path"=>"/add",
-        "controller"=>BurgerController::class,
-        ]
-],
+                "get"=>[
+                    'method' => 'get',
+                    'status' => Response::HTTP_OK,
+                    'normalization_context' => ['groups' => ['Burger:read:simple']],
+                ],
+                
+                "post"=>[
+                    'method' => 'post',
+                    'normalization_context' => ['groups' => ['Burger:read:all']],
+                    'denormalization_context' => ['groups' => ['Burger:write']]
+                ]
+                // "add" => [
+                //     'method' => 'Post',
+                //     "path"=>"/add",
+                //     "controller"=>BurgerController::class,
+                //     ]
+            ],
 itemOperations:         [
     "delete",
     "put",
@@ -57,62 +60,62 @@ itemOperations:         [
 
 class Burger extends Product
 {
+    #[Groups(['Menu:read:id'])]
+    protected $id;
+    #[Groups(['Menu:read:id'])]
+    protected $nom;
+    #[Groups(['Menu:read:id'])]
+    protected $image;
+    #[Groups(['Menu:read:id'])]
+    protected $prix;
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'burgers')]
-    // #[Groups(['Burger:read:all'])]
     private $gestionnaire;
 
-    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
-    #[SerializedName('Burgers')]
-    private $qtburgers;
 
-   
+    // #[Groups(['catalogue:read'])]
+    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
+    private Collection $menuBurgers;
 
     public function __construct()
     {
-        $this->qtburgers = new ArrayCollection();
-    }
-
-    public function getGestionnaire(): ?Gestionnaire
-    {
-        return $this->gestionnaire;
-    }
-
-    public function setGestionnaire(?Gestionnaire $gestionnaire): self
-    {
-        $this->gestionnaire = $gestionnaire;
-
-        return $this;
+        parent::__construct();
+        $this->menuBurgers = new ArrayCollection();
     }
 
     /**
      * @return Collection<int, MenuBurger>
      */
-    public function getQtburgers(): Collection
+    public function getMenuBurgers(): Collection
     {
-        return $this->qtburgers;
+        return $this->menuBurgers;
     }
 
-    public function addQtburger(MenuBurger $qtburger): self
+    public function addMenuBurger(MenuBurger $menuBurger): self
     {
-        if (!$this->qtburgers->contains($qtburger)) {
-            $this->qtburgers[] = $qtburger;
-            $qtburger->setBurger($this);
+        if (!$this->menuBurgers->contains($menuBurger)) {
+            $this->menuBurgers->add($menuBurger);
+            $menuBurger->setBurger($this);
         }
 
         return $this;
     }
 
-    public function removeQtburger(MenuBurger $qtburger): self
+    public function removeMenuBurger(MenuBurger $menuBurger): self
     {
-        if ($this->qtburgers->removeElement($qtburger)) {
+        if ($this->menuBurgers->removeElement($menuBurger)) {
             // set the owning side to null (unless already changed)
-            if ($qtburger->getBurger() === $this) {
-                $qtburger->setBurger(null);
+            if ($menuBurger->getBurger() === $this) {
+                $menuBurger->setBurger(null);
             }
         }
 
         return $this;
     }
 
+  
+    }
 
-}
+   
+
+
+

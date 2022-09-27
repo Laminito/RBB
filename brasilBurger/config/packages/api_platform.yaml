@@ -1,7 +1,17 @@
 api_platform:
+    defaults:
+        pagination_enabled: false
+    eager_loading:
+        force_eager: false
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
+    formats:
+        json:     ['application/json']
+        jsonld:     ['application/json+ld']
+        jsonapi:  ['application/vnd.api+json']
+        html: ['text/html']
+        multipart: ['multipart/form-data']

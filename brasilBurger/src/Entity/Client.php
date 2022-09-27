@@ -48,7 +48,7 @@ class Client extends User
 
     public function __construct(){
         parent::__construct();
-        // $this->roles=['ROLE_CLIENT'];
+         $this->roles=['ROLE_CLIENT'];
       
     }
 

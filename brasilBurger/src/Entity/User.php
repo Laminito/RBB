@@ -50,21 +50,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     // #[Groups(['Burger:read:all'])]
+    // #[Groups(['Commande:write','Livraison:write','User:read:simple'])]
+    #[Groups(['Commande:write','Commande:read:simple','Commande:read:all','Commande:read:id','Livraison:write','User:read:simple'])]
+
     // #[Groups(['Burger:read:all','Gestionnaire:read:simple','Livreur:read:simple'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    // #[Groups(['Burger:read:all','User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
+    //  #[Groups(['Burger:read:all','User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
     #[Assert\Email(message:"Le mail n'est pas valide")]
-    // #[Groups(['User:read:simple'])]
-     #[Groups(['Gestionnaire:read:simple'])]
+     #[Groups(['User:read:simple'])]
+    //  #[Groups(['Gestionnaire:read:simple'])]
 
     protected $email;
 
     #[ORM\Column(type: 'json')]
     // #[Groups(['User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
     // #[Groups(['User:read:simple'])]
-    #[Groups(['Gestionnaire:read:simple'])]
+    #[Groups(['Gestionnaire:read:simple','User:read:simple'])]
 
     protected $roles = [];
 
@@ -74,14 +77,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     // #[Groups(['User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
     // #[Groups(['User:read:simple'])]
-    #[Groups(['Gestionnaire:read:simple'])]
+    #[Groups(['User:read:simple','Gestionnaire:read:simple'])]
     protected $prenom;
 
     // #[Groups(['User:read:simple','Client:read:simple','Gestionnaire:read:simple','Livreur:read:simple'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     // #[Groups(['User:read:simple'])]
-    #[Groups(['Gestionnaire:read:simple'])]
-
+    #[Groups(['User:read:simple','Gestionnaire:read:simple'])]
     protected $nom;
 
     #[ORM\Column(type: 'boolean', nullable: true)]

@@ -2,31 +2,51 @@
 
 namespace App\Entity;
 
-use App\Repository\ZoneRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ZoneRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ZoneRepository::class)]
+#[ApiResource(
+    collectionOperations:   [
+        "get"=>[
+            'method' => 'get',
+            'status' => Response::HTTP_OK,
+            'normalization_context' => ['groups' => ['Zone:read:simple']],
+        ],
+        "post"=>[
+           'method' => 'post',
+           'normalization_context' => ['groups' => ['Zone:read:all']],
+           'denormalization_context' => ['groups' => ['Zone:write']]
+        ],
+    ],
+    itemOperations:         ["put","get","delete"],
+   )]
 class Zone
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['Quartier:write','Zone:read:all','Zone:read:simple','Livraison:write'])]
     private $id;
-
+    #[Groups(['Zone:write','Zone:read:all','Zone:read:simple'])]
     #[ORM\Column(type: 'float', nullable: true)]
     private $prix;
 
-    #[ORM\OneToMany(mappedBy: 'zones', targetEntity: Commande::class)]
-    private $commandes;
-
-    #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
+    #[Groups(['Zone:read:all','Zone:read:simple','Zone:write'])]
+     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
     private $quartier;
+
+    #[Groups(['Zone:write','Zone:read:all','Zone:read:simple'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private $nom ;
 
     public function __construct()
     {
-        $this->commandes = new ArrayCollection();
         $this->quartier = new ArrayCollection();
     }
 
@@ -43,36 +63,6 @@ class Zone
     public function setPrix(?float $prix): self
     {
         $this->prix = $prix;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Commande>
-     */
-    public function getCommandes(): Collection
-    {
-        return $this->commandes;
-    }
-
-    public function addCommande(Commande $commande): self
-    {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes[] = $commande;
-            $commande->setZones($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommande(Commande $commande): self
-    {
-        if ($this->commandes->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
-            if ($commande->getZones() === $this) {
-                $commande->setZones(null);
-            }
-        }
 
         return $this;
     }
@@ -103,6 +93,19 @@ class Zone
                 $quartier->setZone(null);
             }
         }
+
+        return $this;
+    }
+
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(?string $nom): self
+    {
+        $this->nom = $nom;
 
         return $this;
     }
